@@ -1,6 +1,7 @@
 package ucn.datamatiker.vandborg.webuntis;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,16 +17,26 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Document doc;
-		try {
-			doc = Jsoup.connect("https://82.103.142.37/WebUntis/Timetable.do?school=ucn&onlyTimetable=true&ajaxCommand=renderTimetable&date=20130304&type=1&id=1570&formatId=1&departmentId=0&buildingId=-1&dojo.preventCache=1361793330275").userAgent("Mozilla").get();
-			Log.w("WebUntis", doc.html().toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Log.w("WebUntis", e.toString());
-			Log.w("WebUntis", e.getMessage());
-		}
+		
+		//Scraper testscrape = new Scraper("ucn",1362351600,1570);
+		Scraper testscrape = new Scraper("ucn",1362351600,1512);
+		List<ScheduleElement> result = testscrape.scrape();
+		ScheduleElement schduleElement = result.get(0);
+		Log.w("WebUntis", "Subject: "+schduleElement.get_subject());
+		Log.w("WebUntis", "Class: "+schduleElement.get_class());
+		Log.w("WebUntis", "Teacher: "+schduleElement.get_teacher());
+		Log.w("WebUntis", "Classroom: "+schduleElement.get_classroom());
+		Log.w("WebUntis", "From: "+schduleElement.get_from().toString());
+		Log.w("WebUntis", "To: "+schduleElement.get_to().toString());
+		
+		/*for(ScheduleElement schduleElement : result){
+			Log.w("WebUntis", "Subject: "+schduleElement.get_subject());
+			Log.w("WebUntis", "Class: "+schduleElement.get_class());
+			Log.w("WebUntis", "Teacher: "+schduleElement.get_teacher());
+			Log.w("WebUntis", "Classroom: "+schduleElement.get_classroom());
+			Log.w("WebUntis", "From: "+schduleElement.get_from().toString());
+			Log.w("WebUntis", "To: "+schduleElement.get_to().toString());
+		}*/
 	}
 
 	@Override
