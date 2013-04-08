@@ -1,13 +1,17 @@
 package ucn.datamatiker.vandborg.webuntis;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class ScheduleElement {
+	private long _id;
 	private String _subject;
 	private String _class;
 	private String _teacher;
 	private String _classroom;
 	private long _from; //Unixtimestamp
 	private long _to; //Unixtimestamp
-	
+
 	public ScheduleElement() {
 		this._subject = null;
 		this._class = null;
@@ -27,6 +31,14 @@ public class ScheduleElement {
 		this._to = _to;
 	}
 
+	public long get_id() {
+		return _id;
+	}
+
+	public void set_id(long _id) {
+		this._id = _id;
+	}
+	
 	public String get_subject() {
 		return _subject;
 	}
@@ -73,5 +85,13 @@ public class ScheduleElement {
 
 	public void set_to(long _to) {
 		this._to = _to;
+	}
+
+	@Override
+	public String toString() {
+		DateFormat Dateformat = new SimpleDateFormat("HH:mm");
+		String from = Dateformat.format(new java.util.Date((long)this.get_from()));
+		String to = Dateformat.format(new java.util.Date((long)this.get_to()));
+		return from+" til "+to+" - "+this.get_subject()+" - "+this._classroom;
 	}
 }

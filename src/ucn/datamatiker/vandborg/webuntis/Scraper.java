@@ -2,9 +2,10 @@ package ucn.datamatiker.vandborg.webuntis;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,8 +28,8 @@ public class Scraper {
 	}
 	
 	@SuppressLint("SimpleDateFormat")
-	public List<ScheduleElement> scrape(){
-		List<ScheduleElement> result = new ArrayList<ScheduleElement>();
+	public ArrayList<ScheduleElement> scrape(){
+		ArrayList<ScheduleElement> result = new ArrayList<ScheduleElement>();
 		DateFormat df = new SimpleDateFormat("yyyyMMdd");
 		String date = df.format(new java.util.Date((long)_date*1000));
 		Log.w("WebUntis",date);
@@ -40,6 +41,7 @@ public class Scraper {
 			doc = Jsoup.connect(url).get();
 			Elements tablerows = doc.select("table").select("tr");
 			tablerows.remove(tablerows.first());
+			DateFormat Dateformat = new SimpleDateFormat("HH:mm");
 
 			for(Element tableRow : tablerows){
 				int counting = 0;
@@ -61,10 +63,14 @@ public class Scraper {
 								scheduleElement.set_classroom(tableField.text());
 								break;
 							case 6: //Dummy time
-								scheduleElement.set_from(10);
+								Date fromTime = Dateformat.parse(tableField.text());
+								scheduleElement.set_from(fromTime.getTime());
+								//scheduleElement.set_from(10);
 								break;
 							case 7: //Dummy time
-								scheduleElement.set_to(10);
+								Date toTime = Dateformat.parse(tableField.text());
+								scheduleElement.set_to(toTime.getTime());
+								//scheduleElement.set_to(10);
 								break;
 							default:
 								break;
@@ -80,6 +86,9 @@ public class Scraper {
 		} catch (IOException e){
 			Log.w("WebUntis", e.toString());
 			Log.w("WebUntis", e.getMessage());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return result;
