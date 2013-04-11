@@ -1,5 +1,8 @@
 package ucn.datamatiker.vandborg.webuntis;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +71,7 @@ public class WebUntisDataSource {
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
 			ScheduleElement scheduleElement = cursorToScheduleElement(cursor);
+			Log.d("WebUntis", Long.toString(scheduleElement.get_from()));
 			scheduleElements.add(scheduleElement);
 			cursor.moveToNext();
 		}
@@ -75,6 +79,47 @@ public class WebUntisDataSource {
 		cursor.close();
 		
 		return scheduleElements;
+	}
+	
+	public List<ScheduleElement> getAllScheduleElementThisDate(long time) {
+		List<ScheduleElement> scheduleElements = new ArrayList<ScheduleElement>();
+		
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		Log.d("WebUntis", Long.toString(time));
+		String date = df.format(new java.util.Date(time));
+		long from;
+		long to;
+		
+		try {
+			
+			from = df.parse(date).getTime();
+			to = from+(86340*1000);
+			Log.d("WebUntis", Long.toString(from));
+			Log.d("WebUntis", Long.toString(to));
+			String fromString = Long.toString(from);
+			String toString = Long.toString(to);
+			
+			Cursor cursor = database.query(WebUntisSQLiteHelper.TABLE_SCHEDULES, allColumns, WebUntisSQLiteHelper.COLUMN_FROM+" BETWEEN '" +fromString+"' AND '"+toString+"'", null, null, null, null);
+			cursor.moveToFirst();
+			while(!cursor.isAfterLast()){
+				ScheduleElement scheduleElement = cursorToScheduleElement(cursor);
+				Log.d("WebUntis", scheduleElement.toString());
+				scheduleElements.add(scheduleElement);
+				cursor.moveToNext();
+			}
+			
+			cursor.close();
+			
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return scheduleElements;
+	}
+	
+	public void emptyDatabase(){
+		database.execSQL("DELETE FROM " +  WebUntisSQLiteHelper.TABLE_SCHEDULES);
 	}
 	
 	private ScheduleElement cursorToScheduleElement(Cursor cursor) {
@@ -90,4 +135,5 @@ public class WebUntisDataSource {
 		
 		return scheduleElement;
 	}
+	
 }

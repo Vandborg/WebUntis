@@ -13,8 +13,8 @@ public class WebUntisSQLiteHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_CLASS = "class";
 	public static final String COLUMN_TEACHER = "teacher";
 	public static final String COLUMN_CLASSROOM = "classroom";
-	public static final String COLUMN_FROM = "from";
-	public static final String COLUMN_TO = "to";
+	public static final String COLUMN_FROM = "WU_from";
+	public static final String COLUMN_TO = "WU_to";
 	
 	private static final String DATABASE_NAME = "webuntis.db";
 	private static final int DATABASE_VERSION = 1;

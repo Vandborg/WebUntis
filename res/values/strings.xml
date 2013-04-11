@@ -4,5 +4,6 @@
     <string name="app_name">WebUntis</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+	<string name="base_URL">http://webuntis.dk/WebUntis/</string>
+    
 </resources>
